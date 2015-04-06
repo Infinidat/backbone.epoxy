@@ -54,8 +54,8 @@
   };
 
   // Calls method implementations of a super-class object:
-  function _super(instance, method, args) {
-    return instance._super.prototype[method].apply(instance, args);
+  function _esuper(instance, method, args) {
+    return instance._esuper.prototype[method].apply(instance, args);
   }
 
   // Epoxy.Model
@@ -64,13 +64,13 @@
   var modelProps = ['computeds'];
 
   Epoxy.Model = Backbone.Model.extend({
-    _super: Backbone.Model,
+    _esuper: Backbone.Model,
 
     // Backbone.Model constructor override:
     // configures computed model attributes around the underlying native Backbone model.
     constructor: function(attributes, options) {
       _.extend(this, _.pick(options||{}, modelProps));
-      _super(this, 'constructor', arguments);
+      _esuper(this, 'constructor', arguments);
       this.initComputeds(attributes, options);
     },
 
@@ -95,7 +95,7 @@
       }
 
       // Default to native Backbone.Model get operation:
-      return _super(this, 'get', arguments);
+      return _esuper(this, 'get', arguments);
     },
 
     // Backbone.Model.set() override:
@@ -130,7 +130,7 @@
       delete this._setting;
 
       // Pass all resulting set params along to the underlying Backbone Model.
-      var result = _super(this, 'set', [params, options]);
+      var result = _esuper(this, 'set', [params, options]);
 
       // Dispatch all outstanding computed events:
       if (!options.silent) {
@@ -152,7 +152,7 @@
     // Backbone.Model.toJSON() override:
     // adds a 'computed' option, specifying to include computed attributes.
     toJSON: function(options) {
-      var json = _super(this, 'toJSON', arguments);
+      var json = _esuper(this, 'toJSON', arguments);
 
       if (options && options.computed) {
         _.each(this.c(), function(computed, attribute) {
@@ -167,7 +167,7 @@
     // clears all computed attributes before destroying.
     destroy: function() {
       this.clearComputeds();
-      return _super(this, 'destroy', arguments);
+      return _esuper(this, 'destroy', arguments);
     },
 
     // Computed namespace manager:
@@ -989,13 +989,13 @@
   var viewProps = ['viewModel', 'bindings', 'bindingFilters', 'bindingHandlers', 'bindingSources', 'computeds'];
 
   Epoxy.View = Backbone.View.extend({
-    _super: Backbone.View,
+    _esuper: Backbone.View,
 
     // Backbone.View constructor override:
     // sets up binding controls around call to super.
     constructor: function(options) {
       _.extend(this, _.pick(options||{}, viewProps));
-      _super(this, 'constructor', arguments);
+      _esuper(this, 'constructor', arguments);
       this.applyBindings();
     },
 
@@ -1137,7 +1137,7 @@
     // unbinds the view before performing native removal tasks.
     remove: function() {
       this.removeBindings();
-      _super(this, 'remove', arguments);
+      _esuper(this, 'remove', arguments);
     }
 
   }, mixins);
