@@ -483,7 +483,6 @@
         if (this.model._setting) {
           this.model._setting.push(evt);
         } else {
-          evt[0] += ' change';
           this.model.trigger.apply(this.model, evt);
         }
       }
